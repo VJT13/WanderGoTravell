@@ -1,0 +1,268 @@
+// Prisma Schema for WanderGoTravel
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String        @id @default(uuid())
+  email        String        @unique
+  password     String
+  name         String
+  phone        String?
+  avatar       String?
+  role         String        @default("ADMIN") // ADMIN, EDITOR, USER
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  bookings     Booking[]
+  comments     Comment[]
+  notifications Notification[]
+  logs         ActivityLog[]
+}
+
+model Role {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  permissions String   // JSON array string
+  createdAt   DateTime @default(now())
+}
+
+model Category {
+  id          String   @id @default(uuid())
+  name        String
+  slug        String   @unique
+  type        String   @default("TOUR") // TOUR, COMBO, HOTEL, TRANSPORT
+  createdAt   DateTime @default(now())
+  tours       Tour[]
+  blogs       Blog[]
+}
+
+model Tour {
+  id            String      @id @default(uuid())
+  title         String
+  slug          String      @unique
+  destination   String
+  duration      String
+  price         Float
+  originalPrice Float
+  rating        Float       @default(5.0)
+  reviewsCount  Int         @default(0)
+  description   String?
+  highlights    String?     // JSON array string
+  itinerary     String?     // JSON array string
+  includes      String?     // JSON array string
+  image         String
+  badge         String?
+  badgeColor    String?
+  isActive      Boolean     @default(true)
+  isFeatured    Boolean     @default(true)
+  seoTitle      String?
+  seoDesc       String?
+  categoryId    String?
+  category      Category?   @relation(fields: [categoryId], references: [id])
+  images        TourImage[]
+  bookings      Booking[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model TourImage {
+  id        String   @id @default(uuid())
+  url       String
+  alt       String?
+  order     Int      @default(0)
+  tourId    String
+  tour      Tour     @relation(fields: [tourId], references: [id], onDelete: Cascade)
+}
+
+model Booking {
+  id            String         @id @default(uuid())
+  bookingCode   String         @unique
+  userId        String?
+  user          User?          @relation(fields: [userId], references: [id])
+  tourId        String?
+  tour          Tour?          @relation(fields: [tourId], references: [id])
+  customerName  String
+  customerPhone String
+  customerEmail String?
+  departureDate DateTime
+  guests        Int            @default(1)
+  totalPrice    Float
+  status        String         @default("PENDING") // PENDING, CONFIRMED, CANCELLED, COMPLETED
+  paymentStatus String         @default("UNPAID")  // UNPAID, PAID
+  notes         String?
+  details       BookingDetail[]
+  payment       Payment?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model BookingDetail {
+  id          String   @id @default(uuid())
+  bookingId   String
+  booking     Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  guestName   String
+  guestPhone  String?
+}
+
+model Payment {
+  id            String   @id @default(uuid())
+  bookingId     String   @unique
+  booking       Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  method        String   @default("QR_BANK") // QR_BANK, CASH, VNPAY, MOMO
+  amount        Float
+  transactionId String?
+  status        String   @default("PENDING")
+  createdAt     DateTime @default(now())
+}
+
+model Hotel {
+  id            String   @id @default(uuid())
+  name          String
+  slug          String   @unique
+  location      String
+  description   String?
+  pricePerNight Float
+  rating        Float    @default(5.0)
+  images        String?  // JSON array string
+  amenities     String?  // JSON array string
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+}
+
+model Transportation {
+  id          String   @id @default(uuid())
+  name        String
+  type        String   // XE_4_CHO, XE_7_CHO, XE_16_CHO, XE_29_CHO, XE_45_CHO
+  route       String
+  price       Float
+  description String?
+  provider    String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+}
+
+model Combo {
+  id            String   @id @default(uuid())
+  title         String
+  slug          String   @unique
+  description   String?
+  includes      String?  // JSON array string
+  price         Float
+  originalPrice Float
+  image         String?
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+}
+
+model Blog {
+  id          String    @id @default(uuid())
+  title       String
+  slug        String    @unique
+  content     String
+  excerpt     String?
+  coverImage  String?
+  categoryId  String?
+  category    Category? @relation(fields: [categoryId], references: [id])
+  readTime    String    @default("5 phút")
+  views       Int       @default(0)
+  isPublished Boolean   @default(true)
+  seoTitle    String?
+  seoDesc     String?
+  comments    Comment[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  blogId    String
+  blog      Blog     @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  name      String
+  content   String
+  rating    Int      @default(5)
+  createdAt DateTime @default(now())
+}
+
+model Testimonial {
+  id        String   @id @default(uuid())
+  name      String
+  location  String?
+  avatar    String?
+  rating    Int      @default(5)
+  content   String
+  tourName  String?
+  isApproved Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model Contact {
+  id            String   @id @default(uuid())
+  fullName      String
+  phone         String
+  email         String?
+  departureDate String?
+  guests        String?
+  serviceType   String?
+  message       String?
+  status        String   @default("NEW") // NEW, CONTACTED, DONE
+  createdAt     DateTime @default(now())
+}
+
+model Setting {
+  id        String   @id @default(uuid())
+  key       String   @unique
+  value     String
+  group     String   @default("GENERAL")
+  updatedAt DateTime @updatedAt
+}
+
+model Banner {
+  id        String   @id @default(uuid())
+  title     String
+  subtitle  String?
+  image     String
+  link      String?
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model Gallery {
+  id        String   @id @default(uuid())
+  url       String
+  caption   String?
+  category  String?
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  title     String
+  message   String
+  type      String   @default("INFO")
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model ActivityLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  action    String
+  entity    String
+  entityId  String?
+  details   String?
+  ip        String?
+  createdAt DateTime @default(now())
+}
