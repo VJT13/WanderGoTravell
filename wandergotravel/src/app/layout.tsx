@@ -44,6 +44,7 @@ export default function RootLayout({
             __html: `
               (function() {
                 if (typeof window !== 'undefined') {
+                  // Intercept extension errors
                   window.addEventListener('error', function(e) {
                     if (e.filename && (e.filename.indexOf('chrome-extension://') !== -1 || e.filename.indexOf('moz-extension://') !== -1)) {
                       e.stopImmediatePropagation();
@@ -59,13 +60,65 @@ export default function RootLayout({
                       return true;
                     }
                   }, true);
+
+                  // Intercept Bitdefender console.error hydration overlay in Next.js dev
+                  var origError = console.error;
+                  console.error = function() {
+                    for (var i = 0; i < arguments.length; i++) {
+                      var str = '';
+                      try {
+                        str = typeof arguments[i] === 'string' ? arguments[i] : JSON.stringify(arguments[i]);
+                      } catch(err) {
+                        str = String(arguments[i]);
+                      }
+                      if (str && (str.indexOf('bis_skin_checked') !== -1 || str.indexOf('bis_register') !== -1)) {
+                        return;
+                      }
+                    }
+                    return origError.apply(console, arguments);
+                  };
+
+                  var origWarn = console.warn;
+                  console.warn = function() {
+                    for (var i = 0; i < arguments.length; i++) {
+                      var str = '';
+                      try {
+                        str = typeof arguments[i] === 'string' ? arguments[i] : JSON.stringify(arguments[i]);
+                      } catch(err) {
+                        str = String(arguments[i]);
+                      }
+                      if (str && (str.indexOf('bis_skin_checked') !== -1 || str.indexOf('bis_register') !== -1)) {
+                        return;
+                      }
+                    }
+                    return origWarn.apply(console, arguments);
+                  };
                 }
+
+                // Prevent Bitdefender from adding bis_skin_checked to elements
                 if (typeof Element !== 'undefined') {
                   var origSetAttr = Element.prototype.setAttribute;
                   Element.prototype.setAttribute = function(name, value) {
                     if (name === 'bis_skin_checked' || name === 'bis_register') return;
                     return origSetAttr.apply(this, arguments);
                   };
+                }
+
+                // MutationObserver to clean up any bis_skin_checked injected by extension
+                if (typeof MutationObserver !== 'undefined' && typeof document !== 'undefined') {
+                  var observer = new MutationObserver(function(mutations) {
+                    for (var i = 0; i < mutations.length; i++) {
+                      var m = mutations[i];
+                      if (m.type === 'attributes' && (m.attributeName === 'bis_skin_checked' || m.attributeName === 'bis_register')) {
+                        m.target.removeAttribute(m.attributeName);
+                      }
+                    }
+                  });
+                  observer.observe(document.documentElement, {
+                    attributes: true,
+                    subtree: true,
+                    attributeFilter: ['bis_skin_checked', 'bis_register'],
+                  });
                 }
               })();
             `,
