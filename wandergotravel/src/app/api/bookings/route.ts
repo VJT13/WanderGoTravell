@@ -20,6 +20,7 @@ export async function POST(req: Request) {
     const body = await req.json();
     const {
       tourId,
+      tourTitle,
       customerName,
       customerPhone,
       customerEmail,
@@ -38,16 +39,23 @@ export async function POST(req: Request) {
 
     // Safely check if tourId exists in Database
     let validTourId: string | null = null;
+    let resolvedTourTitle = tourTitle || "";
     if (tourId) {
       const existingTour = await prisma.tour.findFirst({
         where: { OR: [{ id: String(tourId) }, { slug: String(tourId) }] },
       });
       if (existingTour) {
         validTourId = existingTour.id;
+        resolvedTourTitle = existingTour.title;
       }
     }
 
     const bookingCode = "WGT-" + Math.floor(100000 + Math.random() * 900000);
+
+    // Prepend tour title into notes so admin can always see which tour
+    const finalNotes = resolvedTourTitle
+      ? `[Tour: ${resolvedTourTitle}]${notes ? " | " + notes : ""}`
+      : notes || null;
 
     const booking = await prisma.booking.create({
       data: {
@@ -59,7 +67,7 @@ export async function POST(req: Request) {
         departureDate: departureDate ? new Date(departureDate) : new Date(),
         guests: parseInt(guests) || 1,
         totalPrice: parseFloat(totalPrice) || 0,
-        notes: notes || null,
+        notes: finalNotes,
       },
     });
 

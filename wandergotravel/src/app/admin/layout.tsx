@@ -28,6 +28,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname();
   const router = useRouter();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Skip layout for login page
   if (pathname === "/admin/login") {
@@ -40,8 +45,49 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     router.push("/admin/login");
   };
 
+  if (!mounted) {
+    return (
+      <div
+        suppressHydrationWarning
+        style={{
+          display: "flex",
+          minHeight: "100vh",
+          background: "#F8FBFD",
+          alignItems: "center",
+          justifyContent: "center",
+          fontFamily: "'Be Vietnam Pro', sans-serif",
+        }}
+      >
+        <div
+          suppressHydrationWarning
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "12px",
+            color: "#0B74D1",
+            fontWeight: 800,
+            fontSize: "0.95rem",
+          }}
+        >
+          <div
+            style={{
+              width: "22px",
+              height: "22px",
+              border: "3px solid #BFDBFE",
+              borderTopColor: "#0B74D1",
+              borderRadius: "50%",
+              animation: "spin 1s linear infinite",
+            }}
+          />
+          Đang khởi tạo hệ thống quản trị...
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
+      suppressHydrationWarning
       style={{
         display: "flex",
         minHeight: "100vh",

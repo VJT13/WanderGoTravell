@@ -7,7 +7,7 @@ import { Menu, X, Phone, Mail, ArrowRight } from "lucide-react";
 const menuItems = [
   { label: "Trang chủ", href: "#home" },
   { label: "Giới thiệu", href: "#about" },
-  { label: "Tour Miền Trung", href: "#tours" },
+  { label: "Tour Du Lịch", href: "#tours" },
   { label: "Combo Du Lịch", href: "#combos" },
   { label: "Tin Tức", href: "#news" },
   { label: "Liên Hệ", href: "#contact" },

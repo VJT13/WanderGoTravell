@@ -5,11 +5,21 @@ export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const destination = searchParams.get("destination");
+    const category = searchParams.get("category");
     const featured = searchParams.get("featured");
 
     const where: any = { isActive: true };
     if (destination) {
       where.destination = { contains: destination };
+    }
+    if (category && category !== "all") {
+      where.category = {
+        OR: [
+          { slug: category },
+          { slug: `tour-${category}` },
+          { id: category },
+        ],
+      };
     }
     if (featured === "true") {
       where.isFeatured = true;
@@ -17,6 +27,9 @@ export async function GET(req: Request) {
 
     const tours = await prisma.tour.findMany({
       where,
+      include: {
+        category: true,
+      },
       orderBy: { createdAt: "desc" },
     });
 
@@ -38,9 +51,12 @@ export async function POST(req: Request) {
       originalPrice,
       image,
       badge,
+      badgeColor,
       description,
       highlights,
       itinerary,
+      categoryId,
+      categorySlug,
     } = body;
 
     if (!title || !destination || !duration || !price || !image) {
@@ -48,6 +64,19 @@ export async function POST(req: Request) {
         { error: "Vui lòng nhập đầy đủ thông tin bắt buộc" },
         { status: 400 }
       );
+    }
+
+    let finalCategoryId = categoryId;
+    if (!finalCategoryId && categorySlug) {
+      const cat = await prisma.category.findFirst({
+        where: {
+          OR: [
+            { slug: categorySlug },
+            { slug: `tour-${categorySlug}` },
+          ],
+        },
+      });
+      if (cat) finalCategoryId = cat.id;
     }
 
     const slug =
@@ -71,9 +100,14 @@ export async function POST(req: Request) {
         originalPrice: parseFloat(originalPrice || price),
         image,
         badge,
+        badgeColor,
         description,
         highlights: typeof highlights === "string" ? highlights : JSON.stringify(highlights || []),
         itinerary: typeof itinerary === "string" ? itinerary : JSON.stringify(itinerary || []),
+        categoryId: finalCategoryId,
+      },
+      include: {
+        category: true,
       },
     });
 

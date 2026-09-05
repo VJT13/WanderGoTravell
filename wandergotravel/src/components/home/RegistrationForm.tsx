@@ -27,24 +27,44 @@ export default function RegistrationForm() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
-    setIsSubmitting(false);
-    setIsSuccess(true);
-
-    setTimeout(() => {
-      setIsSuccess(false);
-      setFormData({
-        fullName: "",
-        phone: "",
-        email: "",
-        departureDate: "",
-        guests: "",
-        serviceType: "",
-        message: "",
+    try {
+      const res = await fetch("/api/contacts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: formData.fullName,
+          phone: formData.phone,
+          email: formData.email,
+          departureDate: formData.departureDate,
+          guests: formData.guests,
+          serviceType: formData.serviceType,
+          message: formData.message,
+        }),
       });
-    }, 3000);
+
+      if (!res.ok) {
+        throw new Error("API error");
+      }
+
+      setIsSuccess(true);
+      setTimeout(() => {
+        setIsSuccess(false);
+        setFormData({
+          fullName: "",
+          phone: "",
+          email: "",
+          departureDate: "",
+          guests: "",
+          serviceType: "",
+          message: "",
+        });
+      }, 3000);
+    } catch (err) {
+      console.error("Contact form submission error:", err);
+      alert("Có lỗi xảy ra khi gửi thông tin. Vui lòng thử lại!");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

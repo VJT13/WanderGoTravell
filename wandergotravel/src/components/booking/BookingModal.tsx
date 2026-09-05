@@ -82,6 +82,7 @@ export default function BookingModal({ tour, onClose }: BookingModalProps) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           tourId: tour.id ? String(tour.id) : undefined,
+          tourTitle: tour.title,
           customerName: formData.fullName,
           customerPhone: formData.phone,
           customerEmail: formData.email,
@@ -239,7 +240,7 @@ export default function BookingModal({ tour, onClose }: BookingModalProps) {
 
                   <img
                     src="/qr-payment.png"
-                    alt="Mã VietQR Thanh Toán NGUYEN DINH VIET"
+                    alt="Mã VietQR Thanh Toán MBBank - PHAM HA LY"
                     style={{
                       width: "100%",
                       maxWidth: "280px",
@@ -253,9 +254,9 @@ export default function BookingModal({ tour, onClose }: BookingModalProps) {
                   />
 
                   <div style={{ fontSize: "0.85rem", color: "#334155", lineHeight: 1.6, textAlign: "center" }}>
-                    Chủ tài khoản: <strong style={{ color: "#0F172A" }}>NGUYEN DINH VIET</strong> <br />
-                    Số tài khoản: <strong style={{ color: "#0B74D1", fontSize: "1rem" }}>0988445698</strong> <br />
-                    Hệ thống: <strong>VietQR / Napas 247</strong>
+                    Chủ tài khoản: <strong style={{ color: "#0F172A" }}>PHẠM HÀ LY</strong> <br />
+                    Số điện thoại: <strong style={{ color: "#0B74D1", fontSize: "1rem" }}>0977 393 425</strong> <br />
+                    Ngân hàng: <strong>MBBank</strong> · VietQR / Napas 247
                   </div>
                 </div>
 

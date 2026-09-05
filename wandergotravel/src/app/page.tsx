@@ -3,7 +3,7 @@ import Footer from "@/components/layout/Footer";
 import FloatingButtons from "@/components/layout/FloatingButtons";
 import HeroBanner from "@/components/home/HeroBanner";
 import AboutSection from "@/components/home/AboutSection";
-import FeaturedTours from "@/components/home/FeaturedTours";
+import AllTours from "@/components/home/AllTours";
 import ServiceCards from "@/components/home/ServiceCards";
 import WhyChooseUs from "@/components/home/WhyChooseUs";
 import TestimonialSlider from "@/components/home/TestimonialSlider";
@@ -17,7 +17,7 @@ export default function Home() {
       <main>
         <HeroBanner />
         <AboutSection />
-        <FeaturedTours />
+        <AllTours />
         <ServiceCards />
         <WhyChooseUs />
         <TestimonialSlider />
