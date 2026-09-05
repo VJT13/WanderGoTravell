@@ -19,7 +19,7 @@ const reasons = [
   {
     icon: <Users size={28} />,
     title: "Đội ngũ chuyên nghiệp",
-    description: "HDV giàu kinh nghiệm, am hiểu văn hóa Miền Trung",
+    description: "HDV giàu kinh nghiệm, am hiểu văn hóa và các vùng miền Việt Nam",
   },
   {
     icon: <Route size={28} />,
@@ -55,7 +55,7 @@ export default function WhyChooseUs() {
         >
           <h2 className="section-title">Vì sao chọn WanderGoTravel?</h2>
           <p className="section-subtitle">
-            Chúng tôi tự hào mang đến trải nghiệm du lịch Miền Trung chất
+            Chúng tôi tự hào mang đến trải nghiệm du lịch Việt Nam chất
             lượng, uy tín và tận tâm nhất
           </p>
         </motion.div>

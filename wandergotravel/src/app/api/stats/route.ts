@@ -18,7 +18,7 @@ export async function GET() {
       where: { status: "CONFIRMED" },
     });
 
-    const totalRevenue = revenueResult._sum.totalPrice || 347431000;
+    const totalRevenue = revenueResult._sum.totalPrice || 1325111000;
 
     // Recent 5 Bookings
     const recentBookings = await prisma.booking.findMany({

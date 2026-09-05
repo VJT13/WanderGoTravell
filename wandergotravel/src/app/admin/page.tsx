@@ -54,30 +54,30 @@ export default function AdminDashboardPage() {
   const [activeTab, setActiveTab] = useState<"overview" | "revenue" | "customers">("overview");
   const [stats, setStats] = useState<StatsData>({
     totalTours: 20,
-    totalBookings: 24,
-    confirmedBookings: 20,
-    pendingBookings: 3,
-    cancelledBookings: 1,
-    totalContacts: 16,
-    newContacts: 7,
-    doneContacts: 5,
-    totalUsers: 150,
-    revenue: 347431000,
+    totalBookings: 35,
+    confirmedBookings: 27,
+    pendingBookings: 6,
+    cancelledBookings: 2,
+    totalContacts: 21,
+    newContacts: 8,
+    doneContacts: 9,
+    totalUsers: 285,
+    revenue: 1325111000,
   });
 
   const [monthlyData, setMonthlyData] = useState<any[]>([
-    { month: "Thg 1", revenue: 17371550, bookings: 2, cost: 10422930, margin: "40%" },
-    { month: "Thg 2", revenue: 20845860, bookings: 2, cost: 12507516, margin: "40%" },
-    { month: "Thg 3", revenue: 20845860, bookings: 2, cost: 12507516, margin: "40%" },
-    { month: "Thg 4", revenue: 27794480, bookings: 3, cost: 16676688, margin: "40%" },
-    { month: "Thg 5", revenue: 31268790, bookings: 3, cost: 18761274, margin: "40%" },
-    { month: "Thg 6", revenue: 41691720, bookings: 4, cost: 25015032, margin: "40%" },
-    { month: "Thg 7", revenue: 48640340, bookings: 5, cost: 29184204, margin: "40%" },
-    { month: "Thg 8", revenue: 52114650, bookings: 5, cost: 31268790, margin: "40%" },
-    { month: "Thg 9", revenue: 31268790, bookings: 3, cost: 18761274, margin: "40%" },
-    { month: "Thg 10", revenue: 20845860, bookings: 2, cost: 12507516, margin: "40%" },
-    { month: "Thg 11", revenue: 17371550, bookings: 2, cost: 10422930, margin: "40%" },
-    { month: "Thg 12", revenue: 17371550, bookings: 2, cost: 10422930, margin: "40%" },
+    { month: "Thg 1", revenue: 66255550, bookings: 2, cost: 39753330, margin: "40%" },
+    { month: "Thg 2", revenue: 79506660, bookings: 2, cost: 47703996, margin: "40%" },
+    { month: "Thg 3", revenue: 79506660, bookings: 2, cost: 47703996, margin: "40%" },
+    { month: "Thg 4", revenue: 106008880, bookings: 3, cost: 63605328, margin: "40%" },
+    { month: "Thg 5", revenue: 119260000, bookings: 3, cost: 71556000, margin: "40%" },
+    { month: "Thg 6", revenue: 159013320, bookings: 4, cost: 95407992, margin: "40%" },
+    { month: "Thg 7", revenue: 185515540, bookings: 5, cost: 111309324, margin: "40%" },
+    { month: "Thg 8", revenue: 198766650, bookings: 5, cost: 119259990, margin: "40%" },
+    { month: "Thg 9", revenue: 119260000, bookings: 3, cost: 71556000, margin: "40%" },
+    { month: "Thg 10", revenue: 79506660, bookings: 2, cost: 47703996, margin: "40%" },
+    { month: "Thg 11", revenue: 66255540, bookings: 2, cost: 39753324, margin: "40%" },
+    { month: "Thg 12", revenue: 66255540, bookings: 2, cost: 39753324, margin: "40%" },
   ]);
 
   const [destinationShare, setDestinationShare] = useState<any[]>([
@@ -87,9 +87,9 @@ export default function AdminDashboardPage() {
   ]);
 
   const [paymentMethods, setPaymentMethods] = useState<any[]>([
-    { method: "Chuyển khoản QR MBBank (VietQR)", percentage: 68, amount: 236253080, color: "#0B74D1" },
-    { method: "Tiền mặt trực tiếp tại VP WanderGo", percentage: 22, amount: 76434820, color: "#16A34A" },
-    { method: "Thẻ Quốc Tế / ATM / VNPay", percentage: 10, amount: 34743100, color: "#F59E0B" },
+    { method: "Chuyển khoản QR MBBank (VietQR)", percentage: 68, amount: 901075480, color: "#0B74D1" },
+    { method: "Tiền mặt trực tiếp tại VP WanderGo", percentage: 22, amount: 291524420, color: "#16A34A" },
+    { method: "Thẻ Quốc Tế / ATM / VNPay", percentage: 10, amount: 132511100, color: "#F59E0B" },
   ]);
 
   const [recentBookings, setRecentBookings] = useState<any[]>([]);

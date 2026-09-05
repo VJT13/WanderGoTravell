@@ -160,9 +160,9 @@ export default function AboutSection() {
               }}
             >
               WanderGoTravel ra đời với sứ mệnh đưa du khách khám phá trọn vẹn
-              vẻ đẹp Miền Trung Việt Nam. Từ những bãi biển xanh ngắt Đà Nẵng,
-              phố cổ lung linh Hội An, cố đô trầm mặc Huế đến hang động kỳ vĩ
-              Quảng Bình – chúng tôi cam kết mang đến trải nghiệm chất lượng
+              vẻ đẹp Việt Nam. Từ những bãi biển xanh ngắt Đà Nẵng, Nha Trang,
+              phố cổ lung linh Hội An, cố đô trầm mặc Huế đến núi rừng kỳ vĩ
+              Tây Bắc, Tây Nguyên – chúng tôi cam kết mang đến trải nghiệm chất lượng
               với mức giá hợp lý nhất.
             </p>
 
@@ -178,12 +178,12 @@ export default function AboutSection() {
                 {
                   icon: <Target size={22} />,
                   title: "Sứ mệnh",
-                  desc: "Khám phá Miền Trung, kết nối trải nghiệm",
+                  desc: "Khám phá Việt Nam, kết nối trải nghiệm",
                 },
                 {
                   icon: <Eye size={22} />,
                   title: "Tầm nhìn",
-                  desc: "Thương hiệu du lịch Miền Trung số 1",
+                  desc: "Thương hiệu du lịch Việt Nam hàng đầu",
                 },
                 {
                   icon: <Heart size={22} />,

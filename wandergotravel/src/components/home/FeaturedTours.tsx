@@ -183,9 +183,9 @@ export default function FeaturedTours() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="section-title">Tour Nổi Bật Miền Trung</h2>
+          <h2 className="section-title">Tour Nổi Bật Việt Nam</h2>
           <p className="section-subtitle">
-            Khám phá những hành trình du lịch tuyệt vời nhất tại Miền Trung Việt Nam với mức giá ưu đãi trọn gói
+            Khám phá những hành trình du lịch tuyệt vời nhất tại Việt Nam với mức giá ưu đãi trọn gói
           </p>
         </motion.div>
 
@@ -448,7 +448,7 @@ export default function FeaturedTours() {
               onClick={() => setShowAll(true)}
               style={{ padding: "14px 44px", fontSize: "0.98rem" }}
             >
-              Xem Tất Cả {tours.length} Tour Miền Trung →
+              Xem Tất Cả {tours.length} Tour Khắp Việt Nam →
             </button>
           </motion.div>
         )}

@@ -48,7 +48,7 @@ export default function NewsPreview() {
         >
           <h2 className="section-title">Tin tức & Kinh nghiệm</h2>
           <p className="section-subtitle">
-            Cập nhật tin tức, kinh nghiệm du lịch và review địa điểm Miền Trung
+            Cập nhật tin tức, kinh nghiệm du lịch và review địa điểm du lịch Việt Nam
             mới nhất
           </p>
         </motion.div>

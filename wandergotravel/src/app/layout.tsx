@@ -2,26 +2,25 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "WanderGoTravel - Khám phá trọn vẹn vẻ đẹp Miền Trung",
+  title: "WanderGoTravel - Khám phá trọn vẹn vẻ đẹp Việt Nam",
   description:
-    "WanderGoTravel chuyên cung cấp tour du lịch Miền Trung Việt Nam: Đà Nẵng, Hội An, Huế, Quảng Bình, Nha Trang, Phú Yên, Quy Nhơn, Đà Lạt, Tây Nguyên. Tour trọn gói, combo tiết kiệm, khách sạn, xe đưa đón.",
+    "WanderGoTravel chuyên cung cấp tour du lịch trọn gói khắp Việt Nam: Đà Nẵng, Hội An, Huế, Sapa, Hà Giang, Mộc Châu, Nha Trang, Đà Lạt, Tây Nguyên... Combo tiết kiệm, khách sạn, xe đưa đón chuyên nghiệp.",
   keywords: [
+    "du lịch việt nam",
     "du lịch miền trung",
+    "du lịch tây bắc",
+    "du lịch tây nguyên",
     "tour đà nẵng",
+    "tour sapa",
     "tour hội an",
     "tour huế",
-    "du lịch quảng bình",
     "tour nha trang",
-    "du lịch phú yên",
-    "tour quy nhơn",
-    "du lịch đà lạt",
-    "du lịch tây nguyên",
     "wandergotravel",
   ],
   openGraph: {
-    title: "WanderGoTravel - Khám phá trọn vẹn vẻ đẹp Miền Trung",
+    title: "WanderGoTravel - Khám phá trọn vẹn vẻ đẹp Việt Nam",
     description:
-      "Tour trọn gói, Combo tiết kiệm, Khách sạn, Xe đưa đón - Chuyên du lịch Miền Trung Việt Nam",
+      "Tour trọn gói, Combo tiết kiệm, Khách sạn, Xe đưa đón - Chuyên du lịch khắp Việt Nam",
     type: "website",
     locale: "vi_VN",
     siteName: "WanderGoTravel",

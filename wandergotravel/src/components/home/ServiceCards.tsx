@@ -9,7 +9,7 @@ const services = [
     icon: <Map size={32} />,
     title: "Tour trọn gói",
     description:
-      "Trải nghiệm tour du lịch Miền Trung trọn gói từ A-Z. Lịch trình chi tiết, hướng dẫn viên chuyên nghiệp.",
+      "Trải nghiệm tour du lịch Việt Nam trọn gói từ A-Z. Lịch trình chi tiết, hướng dẫn viên chuyên nghiệp.",
     color: "#0B74D1",
     bg: "rgba(11, 116, 209, 0.08)",
     target: "#tours",
@@ -29,7 +29,7 @@ const services = [
     icon: <Hotel size={32} />,
     title: "Lưu trú & Ăn uống",
     description:
-      "Khách sạn, resort, homestay chất lượng tại Đà Nẵng, Hội An, Huế, Nha Trang và các tỉnh Miền Trung.",
+      "Khách sạn, resort, homestay chất lượng tại các điểm du lịch hàng đầu khắp Việt Nam.",
     color: "#F59E0B",
     bg: "rgba(245, 158, 11, 0.08)",
     target: "#contact",
@@ -58,7 +58,7 @@ export default function ServiceCards() {
         >
           <h2 className="section-title">Dịch Vụ Của Chúng Tôi</h2>
           <p className="section-subtitle">
-            WanderGoTravel cung cấp trọn bộ giải pháp du lịch Miền Trung hoàn hảo, đáp ứng mọi nhu cầu của du khách
+            WanderGoTravel cung cấp trọn bộ giải pháp du lịch Việt Nam hoàn hảo, đáp ứng mọi nhu cầu của du khách
           </p>
         </motion.div>
 

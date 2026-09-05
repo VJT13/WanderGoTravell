@@ -221,7 +221,7 @@ async function main() {
   // 6. Create Site Settings
   const settingsData = [
     { key: "site_name", value: "WanderGoTravel", group: "GENERAL" },
-    { key: "site_title", value: "WanderGoTravel – Khám phá trọn vẹn vẻ đẹp Miền Trung & Toàn Quốc", group: "SEO" },
+    { key: "site_title", value: "WanderGoTravel – Khám phá trọn vẹn vẻ đẹp Việt Nam", group: "SEO" },
     { key: "hotline", value: "0977 393 425", group: "CONTACT" },
     { key: "email", value: "wandergotravel18@gmail.com", group: "CONTACT" },
     { key: "zalo", value: "0977393425", group: "CONTACT" },

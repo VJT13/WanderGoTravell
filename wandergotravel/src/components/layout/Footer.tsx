@@ -177,7 +177,7 @@ export default function Footer() {
                       marginTop: "2px",
                     }}
                   >
-                    KHÁM PHÁ MIỀN TRUNG
+                    KHÁM PHÁ VIỆT NAM
                   </div>
                 </div>
               </div>
@@ -189,9 +189,9 @@ export default function Footer() {
                   color: "rgba(255,255,255,0.6)",
                 }}
               >
-                Đưa bạn khám phá Miền Trung với trải nghiệm chất lượng, giá
-                hợp lý và dịch vụ tận tâm. Hành trình chạm đến tinh hoa Miền
-                Trung.
+                Đưa bạn khám phá vẻ đẹp Việt Nam với trải nghiệm chất lượng, giá
+                hợp lý và dịch vụ tận tâm. Hành trình chạm đến tinh hoa du lịch
+                Việt Nam.
               </p>
               <div
                 style={{
@@ -499,7 +499,7 @@ export default function Footer() {
                 color: "rgba(255,255,255,0.3)",
               }}
             >
-              Đi để yêu hơn miền Trung Việt Nam ❤️
+              Đi để yêu hơn vẻ đẹp Việt Nam ❤️
             </p>
           </div>
         </div>

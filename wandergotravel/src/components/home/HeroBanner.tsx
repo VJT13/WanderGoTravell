@@ -119,7 +119,7 @@ export default function HeroBanner() {
           }}
         >
           <span>🌴</span>
-          <span>Chuyên Tour Du Lịch Miền Trung Việt Nam</span>
+          <span>Chuyên Tour Du Lịch Khắp Việt Nam</span>
         </motion.div>
 
         {/* Main Title */}
@@ -145,7 +145,7 @@ export default function HeroBanner() {
               WebkitTextFillColor: "transparent",
             }}
           >
-            Miền Trung
+            Việt Nam
           </span>{" "}
           Cùng WanderGoTravel
         </motion.h1>
@@ -434,7 +434,7 @@ export default function HeroBanner() {
           {[
             { number: "500+", label: "Tour đã tổ chức" },
             { number: "10K+", label: "Khách hàng hài lòng" },
-            { number: "12", label: "Điểm đến Miền Trung" },
+            { number: "20+", label: "Điểm đến Việt Nam" },
             { number: "4.9★", label: "Đánh giá trung bình" },
           ].map((stat, i) => (
             <div key={i} style={{ textAlign: "center" }}>

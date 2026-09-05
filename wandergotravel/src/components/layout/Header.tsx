@@ -114,7 +114,7 @@ export default function Header() {
             </span>
           </div>
           <div style={{ fontSize: "0.78rem", opacity: 0.9 }}>
-            🌊 Đi để yêu hơn miền Trung Việt Nam
+            🌊 Đi để yêu hơn vẻ đẹp Việt Nam
           </div>
         </div>
       </div>
@@ -205,7 +205,7 @@ export default function Header() {
                   whiteSpace: "nowrap",
                 }}
               >
-                Khám Phá Miền Trung
+                Khám Phá Việt Nam
               </div>
             </div>
           </a>
