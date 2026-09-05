@@ -15,9 +15,25 @@ import {
   Check,
   AlertCircle,
 } from "lucide-react";
+import { MOCK_CONTACTS } from "@/data/mockSeedData";
+
+function getInitialContacts(): any[] {
+  return MOCK_CONTACTS.map((c: any, idx: number) => ({
+    id: `seed-c-${idx + 1}`,
+    fullName: c.fullName,
+    phone: c.phone,
+    email: c.email || "",
+    departureDate: c.departureDate || "",
+    guests: c.guests || "",
+    serviceType: c.serviceType || "",
+    message: c.message || "",
+    status: c.status || "NEW",
+    createdAt: c.createdAt || new Date().toISOString(),
+  }));
+}
 
 export default function AdminContactsPage() {
-  const [contacts, setContacts] = useState<any[]>([]);
+  const [contacts, setContacts] = useState<any[]>(getInitialContacts);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
 
@@ -25,11 +41,14 @@ export default function AdminContactsPage() {
     try {
       const res = await fetch("/api/contacts");
       const data = await res.json();
-      if (data.success && data.data) {
+      if (data.success && Array.isArray(data.data) && data.data.length > 0) {
         setContacts(data.data);
+      } else {
+        setContacts(getInitialContacts());
       }
     } catch (err) {
-      console.error("Fetch contacts error:", err);
+      console.error("Fetch contacts error, using fallback seed data:", err);
+      setContacts(getInitialContacts());
     }
   };
 

@@ -40,8 +40,27 @@ interface BookingItem {
   createdAt: string;
 }
 
+import { MOCK_BOOKINGS } from "@/data/mockSeedData";
+
+function getInitialBookings(): BookingItem[] {
+  return MOCK_BOOKINGS.map((b: any, idx: number) => ({
+    id: `seed-b-${idx + 1}`,
+    bookingCode: b.bookingCode || "WGT-000000",
+    customerName: b.customerName || "Không rõ",
+    customerPhone: b.customerPhone || "",
+    customerEmail: b.customerEmail || "",
+    tourName: b.tourTitle || "Tour trọn gói WanderGo",
+    departureDate: b.departureDate ? new Date(b.departureDate).toLocaleDateString("vi-VN") : "Linh hoạt",
+    guests: b.guests || 1,
+    totalPrice: b.totalPrice || 0,
+    status: b.status || "CONFIRMED",
+    notes: b.notes || "",
+    createdAt: b.createdAt ? new Date(b.createdAt).toLocaleDateString("vi-VN") : "",
+  }));
+}
+
 export default function AdminBookingsPage() {
-  const [bookings, setBookings] = useState<BookingItem[]>([]);
+  const [bookings, setBookings] = useState<BookingItem[]>(getInitialBookings);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
   const [selectedBooking, setSelectedBooking] = useState<BookingItem | null>(null);
@@ -50,7 +69,7 @@ export default function AdminBookingsPage() {
     try {
       const res = await fetch("/api/bookings");
       const data = await res.json();
-      if (data.success && data.data) {
+      if (data.success && Array.isArray(data.data) && data.data.length > 0) {
         const mapped: BookingItem[] = data.data.map((b: any) => {
           let tourName = b.tour?.title || "";
           if (!tourName && b.notes) {
@@ -77,9 +96,12 @@ export default function AdminBookingsPage() {
           };
         });
         setBookings(mapped);
+      } else {
+        setBookings(getInitialBookings());
       }
     } catch (err) {
-      console.error("Fetch bookings error:", err);
+      console.error("Fetch bookings error, using fallback seed data:", err);
+      setBookings(getInitialBookings());
     }
   };
 

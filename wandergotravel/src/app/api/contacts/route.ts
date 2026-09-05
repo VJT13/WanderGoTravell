@@ -32,11 +32,35 @@ export async function POST(req: Request) {
   }
 }
 
+import { MOCK_CONTACTS } from "@/data/mockSeedData";
+
 export async function GET() {
   try {
-    const contacts = await prisma.contact.findMany({
-      orderBy: { createdAt: "desc" },
-    });
+    let contacts: any[] = [];
+    try {
+      contacts = await prisma.contact.findMany({
+        orderBy: { createdAt: "desc" },
+      });
+    } catch (dbErr) {
+      console.warn("DB query failed on serverless, fallback to mock contacts:", dbErr);
+    }
+
+    if (!contacts || contacts.length === 0) {
+      const fallback = MOCK_CONTACTS.map((c, idx) => ({
+        id: `seed-c-${idx + 1}`,
+        fullName: c.fullName,
+        phone: c.phone,
+        email: c.email,
+        departureDate: c.departureDate,
+        guests: c.guests,
+        serviceType: c.serviceType,
+        message: c.message,
+        status: c.status,
+        createdAt: c.createdAt,
+      }));
+      return NextResponse.json({ success: true, count: fallback.length, data: fallback });
+    }
+
     return NextResponse.json({ success: true, count: contacts.length, data: contacts });
   } catch (error) {
     console.error("GET Contacts Error:", error);

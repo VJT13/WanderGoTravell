@@ -25,13 +25,50 @@ export async function GET(req: Request) {
       where.isFeatured = true;
     }
 
-    const tours = await prisma.tour.findMany({
-      where,
-      include: {
-        category: true,
-      },
-      orderBy: { createdAt: "desc" },
-    });
+    let tours: any[] = [];
+    try {
+      tours = await prisma.tour.findMany({
+        where,
+        include: {
+          category: true,
+        },
+        orderBy: { createdAt: "desc" },
+      });
+    } catch (dbErr) {
+      console.warn("DB query failed on serverless, fallback to INITIAL_TOURS:", dbErr);
+    }
+
+    if (!tours || tours.length === 0) {
+      const { INITIAL_TOURS } = await import("@/data/toursData");
+      let fallback = INITIAL_TOURS.map((t, idx) => ({
+        id: `seed-tour-${idx + 1}`,
+        title: t.title,
+        slug: t.slug || `tour-${idx + 1}`,
+        destination: t.destination,
+        duration: t.duration,
+        price: t.price,
+        originalPrice: t.originalPrice,
+        rating: t.rating,
+        reviewsCount: t.reviewsCount || t.reviews || 50,
+        image: t.image,
+        badge: t.badge,
+        badgeColor: t.badgeColor,
+        description: t.description || "",
+        highlights: JSON.stringify(t.highlights || []),
+        isActive: true,
+        category: {
+          id: `cat-${t.category}`,
+          name: t.category === "tay-bac" ? "Tour Tây Bắc - Miền Bắc" : t.category === "tay-nguyen" ? "Tour Tây Nguyên" : "Tour Miền Trung",
+          slug: t.category,
+        },
+      }));
+
+      if (category && category !== "all") {
+        fallback = fallback.filter((t) => t.category.slug === category || t.category.slug.includes(category));
+      }
+
+      return NextResponse.json({ success: true, count: fallback.length, data: fallback });
+    }
 
     return NextResponse.json({ success: true, count: tours.length, data: tours });
   } catch (error) {

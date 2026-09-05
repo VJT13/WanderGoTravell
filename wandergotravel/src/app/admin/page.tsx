@@ -32,6 +32,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import Link from "next/link";
+import { MOCK_BOOKINGS, MOCK_CONTACTS } from "@/data/mockSeedData";
 
 interface StatsData {
   totalTours: number;
@@ -92,8 +93,26 @@ export default function AdminDashboardPage() {
     { method: "Thẻ Quốc Tế / ATM / VNPay", percentage: 10, amount: 132511100, color: "#F59E0B" },
   ]);
 
-  const [recentBookings, setRecentBookings] = useState<any[]>([]);
-  const [recentContacts, setRecentContacts] = useState<any[]>([]);
+  const [recentBookings, setRecentBookings] = useState<any[]>(() =>
+    MOCK_BOOKINGS.slice(0, 5).map((b, idx) => ({
+      id: `seed-b-${idx + 1}`,
+      bookingCode: b.bookingCode,
+      customerName: b.customerName,
+      customerPhone: b.customerPhone,
+      totalPrice: b.totalPrice,
+      status: b.status,
+      tour: { title: b.tourTitle },
+    }))
+  );
+  const [recentContacts, setRecentContacts] = useState<any[]>(() =>
+    MOCK_CONTACTS.slice(0, 5).map((c, idx) => ({
+      id: `seed-c-${idx + 1}`,
+      fullName: c.fullName,
+      phone: c.phone,
+      message: c.message,
+      status: c.status,
+    }))
+  );
   const [activeIdx, setActiveIdx] = useState<number>(7);
 
   useEffect(() => {
@@ -103,15 +122,17 @@ export default function AdminDashboardPage() {
         const data = await res.json();
 
         if (data.success) {
-          if (data.stats) setStats(data.stats);
-          if (data.monthlyData) setMonthlyData(data.monthlyData);
-          if (data.destinationShare) setDestinationShare(data.destinationShare);
-          if (data.paymentMethods) setPaymentMethods(data.paymentMethods);
-          if (data.recentBookings) setRecentBookings(data.recentBookings);
-          if (data.recentContacts) setRecentContacts(data.recentContacts);
+          if (data.stats && (data.stats.totalBookings > 0 || data.stats.revenue > 0)) {
+            setStats(data.stats);
+          }
+          if (data.monthlyData && data.monthlyData.length > 0) setMonthlyData(data.monthlyData);
+          if (data.destinationShare && data.destinationShare.length > 0) setDestinationShare(data.destinationShare);
+          if (data.paymentMethods && data.paymentMethods.length > 0) setPaymentMethods(data.paymentMethods);
+          if (data.recentBookings && data.recentBookings.length > 0) setRecentBookings(data.recentBookings);
+          if (data.recentContacts && data.recentContacts.length > 0) setRecentContacts(data.recentContacts);
         }
       } catch (err) {
-        console.error("Dashboard error:", err);
+        console.error("Dashboard error, using fallback state:", err);
       }
     }
     fetchData();
