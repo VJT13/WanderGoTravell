@@ -65,6 +65,18 @@ export default function AdminBookingsPage() {
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
   const [selectedBooking, setSelectedBooking] = useState<BookingItem | null>(null);
 
+  const mergeLocalBookings = (list: BookingItem[]): BookingItem[] => {
+    try {
+      const local: BookingItem[] = JSON.parse(localStorage.getItem("wandergo_submitted_bookings") || "[]");
+      if (Array.isArray(local) && local.length > 0) {
+        const existingCodes = new Set(list.map((b) => b.bookingCode));
+        const unique = local.filter((b) => !existingCodes.has(b.bookingCode));
+        return [...unique, ...list];
+      }
+    } catch (e) {}
+    return list;
+  };
+
   const fetchBookings = async () => {
     try {
       const res = await fetch("/api/bookings");
@@ -95,17 +107,19 @@ export default function AdminBookingsPage() {
             createdAt: b.createdAt ? new Date(b.createdAt).toLocaleDateString("vi-VN") : "",
           };
         });
-        setBookings(mapped);
+        setBookings(mergeLocalBookings(mapped));
       } else {
-        setBookings(getInitialBookings());
+        setBookings(mergeLocalBookings(getInitialBookings()));
       }
     } catch (err) {
       console.error("Fetch bookings error, using fallback seed data:", err);
-      setBookings(getInitialBookings());
+      setBookings(mergeLocalBookings(getInitialBookings()));
     }
   };
 
   useEffect(() => {
+    // Immediate load from local storage
+    setBookings((prev) => mergeLocalBookings(prev));
     fetchBookings();
   }, []);
 

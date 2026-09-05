@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { saveTempContact, getTempContacts } from "@/lib/tempStore";
+import { MOCK_CONTACTS } from "@/data/mockSeedData";
 
 export async function POST(req: Request) {
   try {
@@ -42,6 +44,9 @@ export async function POST(req: Request) {
       };
     }
 
+    // Always persist to /tmp store for serverless
+    saveTempContact(newContact);
+
     return NextResponse.json({ success: true, data: newContact }, { status: 201 });
   } catch (error) {
     console.error("POST Contact Error:", error);
@@ -49,10 +54,9 @@ export async function POST(req: Request) {
   }
 }
 
-import { MOCK_CONTACTS } from "@/data/mockSeedData";
-
 export async function GET() {
   try {
+    const temp = getTempContacts();
     let contacts: any[] = [];
     try {
       contacts = await prisma.contact.findMany({
@@ -75,10 +79,15 @@ export async function GET() {
         status: c.status,
         createdAt: c.createdAt,
       }));
-      return NextResponse.json({ success: true, count: fallback.length, data: fallback });
+      contacts = fallback;
     }
 
-    return NextResponse.json({ success: true, count: contacts.length, data: contacts });
+    // Merge temp contacts at the beginning
+    const existingIds = new Set(contacts.map((c: any) => c.id || (c.fullName + c.phone)));
+    const uniqueTemp = temp.filter((c: any) => !existingIds.has(c.id || (c.fullName + c.phone)));
+    const finalContacts = [...uniqueTemp, ...contacts];
+
+    return NextResponse.json({ success: true, count: finalContacts.length, data: finalContacts });
   } catch (error) {
     console.error("GET Contacts Error:", error);
     return NextResponse.json({ error: "Lỗi lấy danh sách liên hệ" }, { status: 500 });

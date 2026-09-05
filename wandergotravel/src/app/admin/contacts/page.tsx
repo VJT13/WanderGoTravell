@@ -37,22 +37,36 @@ export default function AdminContactsPage() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
 
+  const mergeLocalContacts = (list: any[]): any[] => {
+    try {
+      const local: any[] = JSON.parse(localStorage.getItem("wandergo_submitted_contacts") || "[]");
+      if (Array.isArray(local) && local.length > 0) {
+        const existingIds = new Set(list.map((c) => c.id || (c.fullName + c.phone)));
+        const unique = local.filter((c) => !existingIds.has(c.id || (c.fullName + c.phone)));
+        return [...unique, ...list];
+      }
+    } catch (e) {}
+    return list;
+  };
+
   const fetchContacts = async () => {
     try {
       const res = await fetch("/api/contacts");
       const data = await res.json();
       if (data.success && Array.isArray(data.data) && data.data.length > 0) {
-        setContacts(data.data);
+        setContacts(mergeLocalContacts(data.data));
       } else {
-        setContacts(getInitialContacts());
+        setContacts(mergeLocalContacts(getInitialContacts()));
       }
     } catch (err) {
       console.error("Fetch contacts error, using fallback seed data:", err);
-      setContacts(getInitialContacts());
+      setContacts(mergeLocalContacts(getInitialContacts()));
     }
   };
 
   useEffect(() => {
+    // Immediate load from local storage
+    setContacts((prev) => mergeLocalContacts(prev));
     fetchContacts();
   }, []);
 

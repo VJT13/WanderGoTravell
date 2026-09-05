@@ -92,6 +92,26 @@ export default function BookingModal({ tour, onClose }: BookingModalProps) {
           notes: formData.note,
         }),
       });
+
+      // Save to localStorage for instant client sync with Admin Dashboard
+      try {
+        const localRecord = {
+          id: "usr-b-" + Date.now(),
+          bookingCode: "WGT-" + Math.floor(100000 + Math.random() * 900000),
+          customerName: formData.fullName,
+          customerPhone: formData.phone,
+          customerEmail: formData.email,
+          tourName: tour.title,
+          departureDate: formData.departureDate ? new Date(formData.departureDate).toLocaleDateString("vi-VN") : "Linh hoạt",
+          guests: formData.guests,
+          totalPrice: totalPrice,
+          status: "PENDING",
+          notes: formData.note || "",
+          createdAt: new Date().toLocaleDateString("vi-VN"),
+        };
+        const stored = JSON.parse(localStorage.getItem("wandergo_submitted_bookings") || "[]");
+        localStorage.setItem("wandergo_submitted_bookings", JSON.stringify([localRecord, ...stored]));
+      } catch (storageErr) {}
     } catch (err) {
       console.error("Booking API error:", err);
     } finally {

@@ -48,6 +48,24 @@ export default function RegistrationForm() {
         if (data && data.success) isOk = true;
       } catch {}
 
+      // Save to localStorage for instant client sync with Admin Dashboard
+      try {
+        const localRecord = {
+          id: "usr-c-" + Date.now(),
+          fullName: formData.fullName,
+          phone: formData.phone,
+          email: formData.email,
+          departureDate: formData.departureDate,
+          guests: formData.guests,
+          serviceType: formData.serviceType || "Tư vấn tour",
+          message: formData.message || "Đăng ký tư vấn du lịch",
+          status: "NEW",
+          createdAt: new Date().toISOString(),
+        };
+        const stored = JSON.parse(localStorage.getItem("wandergo_submitted_contacts") || "[]");
+        localStorage.setItem("wandergo_submitted_contacts", JSON.stringify([localRecord, ...stored]));
+      } catch (storageErr) {}
+
       if (isOk) {
         setIsSuccess(true);
         setTimeout(() => {

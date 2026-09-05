@@ -116,6 +116,39 @@ export default function AdminDashboardPage() {
   const [activeIdx, setActiveIdx] = useState<number>(7);
 
   useEffect(() => {
+    try {
+      const localBookings = JSON.parse(localStorage.getItem("wandergo_submitted_bookings") || "[]");
+      const localContacts = JSON.parse(localStorage.getItem("wandergo_submitted_contacts") || "[]");
+
+      if (Array.isArray(localBookings) && localBookings.length > 0) {
+        setRecentBookings((prev) => {
+          const codes = new Set(prev.map((b) => b.bookingCode));
+          const unique = localBookings
+            .filter((b: any) => !codes.has(b.bookingCode))
+            .map((b: any) => ({ ...b, tour: { title: b.tourName || "Tour WanderGo" } }));
+          return [...unique, ...prev].slice(0, 8);
+        });
+        setStats((prev) => ({
+          ...prev,
+          totalBookings: prev.totalBookings + localBookings.length,
+          pendingBookings: prev.pendingBookings + localBookings.filter((b: any) => b.status === "PENDING").length,
+        }));
+      }
+
+      if (Array.isArray(localContacts) && localContacts.length > 0) {
+        setRecentContacts((prev) => {
+          const ids = new Set(prev.map((c) => c.id || (c.fullName + c.phone)));
+          const unique = localContacts.filter((c: any) => !ids.has(c.id || (c.fullName + c.phone)));
+          return [...unique, ...prev].slice(0, 8);
+        });
+        setStats((prev) => ({
+          ...prev,
+          totalContacts: prev.totalContacts + localContacts.length,
+          newContacts: prev.newContacts + localContacts.filter((c: any) => c.status === "NEW").length,
+        }));
+      }
+    } catch (e) {}
+
     async function fetchData() {
       try {
         const res = await fetch("/api/stats");
@@ -123,13 +156,30 @@ export default function AdminDashboardPage() {
 
         if (data.success) {
           if (data.stats && (data.stats.totalBookings > 0 || data.stats.revenue > 0)) {
-            setStats(data.stats);
+            setStats((prev) => ({
+              ...data.stats,
+              // Keep any newly added local submissions
+              totalBookings: Math.max(prev.totalBookings, data.stats.totalBookings),
+              totalContacts: Math.max(prev.totalContacts, data.stats.totalContacts),
+            }));
           }
           if (data.monthlyData && data.monthlyData.length > 0) setMonthlyData(data.monthlyData);
           if (data.destinationShare && data.destinationShare.length > 0) setDestinationShare(data.destinationShare);
           if (data.paymentMethods && data.paymentMethods.length > 0) setPaymentMethods(data.paymentMethods);
-          if (data.recentBookings && data.recentBookings.length > 0) setRecentBookings(data.recentBookings);
-          if (data.recentContacts && data.recentContacts.length > 0) setRecentContacts(data.recentContacts);
+          if (data.recentBookings && data.recentBookings.length > 0) {
+            setRecentBookings((prev) => {
+              const codes = new Set(data.recentBookings.map((b: any) => b.bookingCode));
+              const uniquePrev = prev.filter((b) => !codes.has(b.bookingCode));
+              return [...uniquePrev, ...data.recentBookings].slice(0, 8);
+            });
+          }
+          if (data.recentContacts && data.recentContacts.length > 0) {
+            setRecentContacts((prev) => {
+              const ids = new Set(data.recentContacts.map((c: any) => c.id || (c.fullName + c.phone)));
+              const uniquePrev = prev.filter((c) => !ids.has(c.id || (c.fullName + c.phone)));
+              return [...uniquePrev, ...data.recentContacts].slice(0, 8);
+            });
+          }
         }
       } catch (err) {
         console.error("Dashboard error, using fallback state:", err);

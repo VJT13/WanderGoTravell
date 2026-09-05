@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { MOCK_BOOKINGS } from "@/data/mockSeedData";
+import { saveTempBooking, getTempBookings } from "@/lib/tempStore";
 
 export async function GET() {
   try {
+    const temp = getTempBookings();
     let bookings: any[] = [];
     try {
       bookings = await prisma.booking.findMany({
@@ -35,10 +37,15 @@ export async function GET() {
           slug: b.tourSlug,
         },
       }));
-      return NextResponse.json({ success: true, count: fallback.length, data: fallback });
+      bookings = fallback;
     }
 
-    return NextResponse.json({ success: true, count: bookings.length, data: bookings });
+    // Merge temp bookings at the top
+    const existingCodes = new Set(bookings.map((b: any) => b.bookingCode));
+    const uniqueTemp = temp.filter((b: any) => !existingCodes.has(b.bookingCode));
+    const finalBookings = [...uniqueTemp, ...bookings];
+
+    return NextResponse.json({ success: true, count: finalBookings.length, data: finalBookings });
   } catch (error) {
     console.error("GET Bookings Error:", error);
     return NextResponse.json({ error: "Lỗi lấy danh sách booking" }, { status: 500 });
@@ -120,6 +127,9 @@ export async function POST(req: Request) {
         createdAt: new Date().toISOString(),
       };
     }
+
+    // Always persist to /tmp store for serverless
+    saveTempBooking(booking);
 
     return NextResponse.json({ success: true, data: booking }, { status: 201 });
   } catch (error) {
